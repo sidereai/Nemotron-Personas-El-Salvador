@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-nube text-carbon font-nunito antialiased min-h-screen relative overflow-x-hidden;
+  }
+
+  /* Dot Grid Background - Neuro-Play Aesthetic */
+  body::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image: radial-gradient(#3B82F6 1px, transparent 1px);
+    background-size: 24px 24px;
+    opacity: 0.05;
+    pointer-events: none;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-naranja hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-pill 
+           shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.05] 
+           active:scale-[0.95] flex items-center justify-center gap-2;
+  }
+
+  .btn-secondary {
+    @apply bg-white hover:bg-gray-50 text-carbon font-semibold py-2 px-4 rounded-pill 
+           border-2 border-gray-100 shadow-sm transition-all duration-300 
+           transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2;
+  }
+
+  .card {
+    @apply bg-white rounded-blob shadow-md border border-gray-100 overflow-hidden;
+  }
+  
+  .glass-pill {
+    @apply bg-white/80 backdrop-blur-md border border-white/50 shadow-sm rounded-pill;
+  }
+}
+
+/* Custom Utilities for Animations */
+.stagger-1 { animation-delay: 100ms; }
+.stagger-2 { animation-delay: 200ms; }
+.stagger-3 { animation-delay: 300ms; }
+.stagger-4 { animation-delay: 400ms; }
+
+/* SVG Heartbeat Monitor Path Animation */
+.monitor-path {
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke 0.3s ease;
+}
+
+.monitor-grid {
+  stroke: rgba(59, 130, 246, 0.1);
+  stroke-width: 1;
+}
+
+/* Scrollbar customization */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400;
+}
