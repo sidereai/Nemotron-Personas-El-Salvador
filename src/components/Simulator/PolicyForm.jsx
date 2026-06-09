@@ -57,6 +57,7 @@ export default function PolicyForm({ onStart, status }) {
     } else {
       setDailySims({ date: today, count: 0 });
       localStorage.setItem('pulso_sims', JSON.stringify({ date: today, count: 0 }));
+    }
   }, []);
 
   // Rollback daily simulation count if the server throws an error
