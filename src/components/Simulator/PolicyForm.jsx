@@ -24,7 +24,8 @@ const POLICIES = [
   "Nacionalización del sistema de transporte público"
 ];
 
-export default function PolicyForm({ onStart, isRunning }) {
+export default function PolicyForm({ onStart, status }) {
+  const isRunning = status === 'processing';
   const [policy, setPolicy] = useState('');
   const [mode, setMode] = useState('rapida'); // rapida, estandar, profunda
   const [quality, setQuality] = useState('flash'); // flash, mayor_calidad
@@ -56,8 +57,21 @@ export default function PolicyForm({ onStart, isRunning }) {
     } else {
       setDailySims({ date: today, count: 0 });
       localStorage.setItem('pulso_sims', JSON.stringify({ date: today, count: 0 }));
-    }
   }, []);
+
+  // Rollback daily simulation count if the server throws an error
+  const prevStatusRef = useRef(status);
+  useEffect(() => {
+    if (prevStatusRef.current === 'processing' && status === 'error') {
+      setDailySims(prev => {
+        const revertedCount = Math.max(0, prev.count - 1);
+        const revertedSims = { ...prev, count: revertedCount };
+        localStorage.setItem('pulso_sims', JSON.stringify(revertedSims));
+        return revertedSims;
+      });
+    }
+    prevStatusRef.current = status;
+  }, [status]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

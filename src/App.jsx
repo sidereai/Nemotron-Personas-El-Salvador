@@ -37,7 +37,7 @@ export default function App() {
 
         <div id="simulator" className="py-20 px-4">
           <div className="container mx-auto">
-            <PolicyForm onStart={handleStart} isRunning={sim.status === 'processing'} />
+            <PolicyForm onStart={handleStart} status={sim.status} />
           </div>
         </div>
 
@@ -47,7 +47,8 @@ export default function App() {
               status={sim.status} 
               progress={sim.progress} 
               results={sim.results} 
-              quality={sim.status === 'processing' ? 'flash' : null} // Can pass actual quality from state if needed
+              quality={sim.status === 'processing' ? 'flash' : null}
+              error={sim.error}
             />
           </div>
         </div>

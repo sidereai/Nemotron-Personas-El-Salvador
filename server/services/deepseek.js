@@ -56,6 +56,11 @@ export async function runBatch(prompts, options, onProgress) {
         if (onProgress) onProgress(result, index, prompts.length);
         return result;
       } catch (err) {
+        // Intercept overload or rate limit errors from the AI Provider
+        if (err.status === 429 || err.status === 500 || err.status === 502 || err.status === 503 || (err.message && err.message.includes('fetch failed'))) {
+          throw new Error("Alta demanda, servidor ocupado, intenta más tarde.");
+        }
+        
         const result = { index, profile: prompt.profile, raw: null, error: err.message };
         results.push(result);
         if (onProgress) onProgress(result, index, prompts.length);

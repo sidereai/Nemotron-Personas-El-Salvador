@@ -3,7 +3,7 @@ import anime from 'animejs';
 import { Activity, CheckCircle, Clock } from 'lucide-react';
 import PersonaCard from './PersonaCard';
 
-export default function SimulationRunner({ status, progress, results, quality }) {
+export default function SimulationRunner({ status, progress, results, quality, error }) {
   const svgRef = useRef(null);
   const pathRef = useRef(null);
   const isThinking = quality === 'mayor_calidad';
@@ -70,6 +70,21 @@ export default function SimulationRunner({ status, progress, results, quality })
   }, [status]);
 
   if (status === 'idle') return null;
+
+  if (status === 'error') {
+    return (
+      <div className="w-full max-w-4xl mx-auto my-8 animate-fade-in-up">
+        <div className="card p-8 bg-rojo/10 border-2 border-rojo/30 text-center rounded-2xl">
+          <div className="mx-auto w-16 h-16 bg-rojo/20 rounded-full flex items-center justify-center mb-4">
+            <span className="text-rojo font-bold text-2xl">!</span>
+          </div>
+          <h3 className="text-xl font-bold text-rojo mb-2">Simulación Interrumpida</h3>
+          <p className="text-gray-700 font-medium">{error || "Ocurrió un error inesperado durante la simulación."}</p>
+          <p className="mt-4 text-sm text-gray-500">Tu límite diario no ha sido afectado.</p>
+        </div>
+      </div>
+    );
+  }
 
   const percent = progress.total > 0 ? Math.round((progress.current / progress.total) * 100) : 0;
 
