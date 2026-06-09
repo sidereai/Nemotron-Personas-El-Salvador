@@ -33,11 +33,19 @@ Política pública a evaluar: "${policy}"
 }
 
 simulateRoute.post('/', async (req, res) => {
-  const { policy, mode = 'rapida', quality = 'flash', filters = {} } = req.body;
+  let { policy, mode = 'rapida', quality = 'flash', filters = {} } = req.body;
 
-  if (!policy) {
-    return res.status(400).json({ error: 'Policy is required' });
+  if (!policy || typeof policy !== 'string') {
+    return res.status(400).json({ error: 'Policy string is required' });
   }
+
+  // Security: Prevent extremely long prompt injections (limit to 500 characters)
+  if (policy.length > 500) {
+    return res.status(400).json({ error: 'Policy text exceeds maximum allowed length of 500 characters.' });
+  }
+
+  // Security: Basic sanitization to prevent HTML/Script injection in the prompt
+  policy = policy.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
   // Set up SSE
   res.setHeader('Content-Type', 'text/event-stream');
