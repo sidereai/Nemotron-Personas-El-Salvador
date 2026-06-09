@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import anime from 'animejs';
-import { User, MapPin, Briefcase } from 'lucide-react';
+import { User, MapPin, Briefcase, CheckCircle, AlertCircle } from 'lucide-react';
 
 const DEPT_COLORS = {
   'San Salvador': 'bg-blue-100 text-blue-800',
@@ -65,7 +65,8 @@ export default function PersonaCard({ result, index }) {
             <h5 className="font-bold text-carbon truncate pr-2">
               {profile.sex === 'Masculino' ? 'Hombre' : 'Mujer'}, {profile.age} años
             </h5>
-            <span className={`px-2 py-1 rounded-pill text-xs font-bold shrink-0 ${sentColor}`}>
+            <span className={`px-2 py-1 rounded-pill text-xs font-bold shrink-0 flex items-center gap-1 ${sentColor}`}>
+              {error ? <AlertCircle className="w-3 h-3" /> : <CheckCircle className="w-3 h-3" />}
               {sentLabel}
             </span>
           </div>

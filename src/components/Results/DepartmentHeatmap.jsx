@@ -28,8 +28,9 @@ export default function DepartmentHeatmap({ byDepartment }) {
       
     svg.selectAll('*').remove(); // Clear previous render
 
-    // Projection for El Salvador
-    const projection = d3.geoMercator()
+    // Highcharts uses pre-projected coordinates on a 10k grid, so we use geoIdentity to scale it properly
+    const projection = d3.geoIdentity()
+      .reflectY(true) // Reflect Y axis because Highcharts coordinates grow upwards
       .fitSize([width - 40, height - 40], geoData);
       
     const pathGenerator = d3.geoPath().projection(projection);
@@ -70,14 +71,14 @@ export default function DepartmentHeatmap({ byDepartment }) {
       .delay((d, i) => i * 50)
       .attr('opacity', 1)
       .attr('transform', 'translate(0, 0)')
-      .attr('fill', d => getColor(d.properties.NAMLSAD))
+      .attr('fill', d => getColor(d.properties.name))
       .end()
       .then(() => {
         // Add interactivity after animation
         g.selectAll('path')
           .on('mouseover', function(event, d) {
             d3.select(this).style('filter', 'drop-shadow(0px 4px 6px rgba(0,0,0,0.1))');
-            const deptName = d.properties.NAMLSAD;
+            const deptName = d.properties.name;
             const stats = byDepartment[deptName] || { a_favor: 0, neutral: 0, en_contra: 0 };
             const total = stats.a_favor + stats.neutral + stats.en_contra;
             

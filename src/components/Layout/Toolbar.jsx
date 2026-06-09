@@ -21,8 +21,9 @@ export default function Toolbar() {
         {/* Nav */}
         <nav className="hidden md:flex gap-4 text-sm font-bold text-gray-500">
           <a href="#" className="text-cielo hover:text-blue-700 transition-colors">Simulador</a>
-          <a href="#" className="hover:text-carbon transition-colors">Metodología</a>
-          <a href="https://github.com/sidereai/Nemotron-Personas-El-Salvador.git" target="_blank" className="hover:text-carbon transition-colors">Dataset</a>
+          <a href="#metodologia" className="hover:text-carbon transition-colors">Metodología</a>
+          <a href="https://huggingface.co/datasets/nvidia/Nemotron-Personas-El-Salvador" target="_blank" className="hover:text-carbon transition-colors">Dataset</a>
+          <a href="https://sidereai.com/" target="_blank" className="hover:text-carbon transition-colors">SidereAI</a>
         </nav>
       </div>
     </div>

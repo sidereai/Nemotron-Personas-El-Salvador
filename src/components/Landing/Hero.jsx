@@ -34,7 +34,7 @@ export default function Hero() {
       <div className="container mx-auto px-4 text-center z-10 relative">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-gray-200 text-xs font-bold text-gray-500 mb-8 hero-element shadow-sm">
           <span className="w-2 h-2 rounded-full bg-verde animate-pulse"></span>
-          DeepSeek V4 Flash Integrado
+          Análisis con Inteligencia Flash
         </div>
         
         <h1 className="text-5xl md:text-7xl font-black text-carbon mb-6 tracking-tight hero-element leading-tight">

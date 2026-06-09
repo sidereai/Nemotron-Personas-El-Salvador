@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Toolbar from './components/Layout/Toolbar';
 import Hero from './components/Landing/Hero';
 import Features from './components/Landing/Features';
+import Methodology from './components/Landing/Methodology';
 import PolicyForm from './components/Simulator/PolicyForm';
 import SimulationRunner from './components/Simulator/SimulationRunner';
 import SentimentGauge from './components/Results/SentimentGauge';
@@ -32,6 +33,7 @@ export default function App() {
       <main>
         <Hero />
         <Features />
+        <Methodology />
 
         <div id="simulator" className="py-20 px-4">
           <div className="container mx-auto">
@@ -85,8 +87,37 @@ export default function App() {
         )}
       </main>
       
-      <footer className="bg-carbon text-gray-400 py-8 text-center text-sm">
-        <p>© 2026 PulsoSV. Impulsado por NVIDIA Nemotron y DeepSeek V4 Flash.</p>
+      <footer className="bg-carbon text-gray-400 py-12 text-center text-sm border-t border-gray-800">
+        <div className="container mx-auto px-4">
+          <div className="max-w-2xl mx-auto mb-8">
+            <h4 className="text-white font-bold text-lg mb-3">Construido por SidereAI</h4>
+            <p className="text-gray-400 leading-relaxed">
+              Somos especialistas en inteligencia artificial, desarrollo de agentes sintéticos y análisis de datos masivos. 
+              Creamos este laboratorio como una prueba de concepto del potencial de los modelos de lenguaje para el análisis social en El Salvador.
+            </p>
+          </div>
+          
+          <div className="bg-slate-800/50 rounded-2xl p-6 max-w-xl mx-auto border border-slate-700 mb-8">
+            <p className="mb-4 text-gray-300 font-medium text-base">
+              ¿Necesitas simulaciones a mayor escala (&gt;100 hasta 100K+ perfiles) o análisis de datos personalizados para tu institución?
+            </p>
+            <a 
+              href="https://wa.me/50362200921" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#20b858] text-white px-6 py-3 rounded-full font-bold transition-all shadow-lg hover:scale-105"
+            >
+              Contactar por WhatsApp
+            </a>
+          </div>
+
+          <p className="text-gray-500">
+            © 2026 PulsoSV. Una herramienta oficial de{' '}
+            <a href="https://sidereai.com/" target="_blank" rel="noopener noreferrer" className="text-cielo hover:underline font-bold">
+              SidereAI
+            </a>. Todos los derechos reservados.
+          </p>
+        </div>
       </footer>
     </div>
   );

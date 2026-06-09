@@ -89,7 +89,7 @@ simulateRoute.post('/', async (req, res) => {
           education_level: result.profile.education_level,
           avatarSeed: result.profile.persona
         },
-        result: parsed,
+        parsed: parsed,
         error: result.error
       });
     });

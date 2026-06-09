@@ -1,11 +1,27 @@
-import React, { useState } from 'react';
-import { Play, Settings2, SlidersHorizontal, Zap, BrainCircuit } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Play, Settings2, SlidersHorizontal, Zap, Lock, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const POLICIES = [
   "Aprobación de la pena de muerte para crímenes graves",
   "Impuesto del 5% a todas las remesas familiares",
   "Aumento del salario mínimo a $400 mensuales a nivel nacional",
-  "Legalización del matrimonio igualitario en El Salvador"
+  "Legalización del matrimonio igualitario en El Salvador",
+  "Prohibición total de la minería metálica y no metálica",
+  "Aprobación del aborto terapéutico en casos de riesgo",
+  "Privatización del servicio de agua potable (ANDA)",
+  "Reelección presidencial indefinida",
+  "Implementación de peajes en las principales carreteras",
+  "Reducción de la edad penal a los 12 años",
+  "Uso obligatorio del Bitcoin para pago de salarios",
+  "Eliminación de la pensión vitalicia para expresidentes",
+  "Servicio militar obligatorio para jóvenes (NiNis)",
+  "Aprobación de la ley de eutanasia asistida",
+  "Legalización de la marihuana para uso recreativo",
+  "Eliminación del subsidio al gas propano",
+  "Restricción vehicular por número de placa (Hoy No Circula)",
+  "Construcción de un tren nacional con deuda externa",
+  "Impuesto a las bebidas azucaradas y ultraprocesados",
+  "Nacionalización del sistema de transporte público"
 ];
 
 export default function PolicyForm({ onStart, isRunning }) {
@@ -14,11 +30,45 @@ export default function PolicyForm({ onStart, isRunning }) {
   const [quality, setQuality] = useState('flash'); // flash, mayor_calidad
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({ department: '', sex: '', education_level: '' });
+  const [dailySims, setDailySims] = useState({ date: '', count: 0 });
+  const scrollRef = useRef(null);
+
+  const scrollPolicies = (direction) => {
+    if (scrollRef.current) {
+      const amount = direction === 'left' ? -300 : 300;
+      scrollRef.current.scrollBy({ left: amount, behavior: 'smooth' });
+    }
+  };
+
+  useEffect(() => {
+    const stored = localStorage.getItem('pulso_sims');
+    const today = new Date().toDateString();
+    
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (parsed.date === today) {
+        setDailySims(parsed);
+      } else {
+        // Reset if it's a new day
+        setDailySims({ date: today, count: 0 });
+        localStorage.setItem('pulso_sims', JSON.stringify({ date: today, count: 0 }));
+      }
+    } else {
+      setDailySims({ date: today, count: 0 });
+      localStorage.setItem('pulso_sims', JSON.stringify({ date: today, count: 0 }));
+    }
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!policy.trim()) return;
+    if (!policy.trim() || dailySims.count >= 3) return;
     
+    // Increment daily count
+    const newCount = dailySims.count + 1;
+    const newSims = { ...dailySims, count: newCount };
+    setDailySims(newSims);
+    localStorage.setItem('pulso_sims', JSON.stringify(newSims));
+
     // Convert empty strings to null for backend
     const cleanFilters = {};
     Object.keys(filters).forEach(k => {
@@ -48,18 +98,46 @@ export default function PolicyForm({ onStart, isRunning }) {
             className="w-full h-32 p-4 border-2 border-gray-200 rounded-2xl focus:border-cielo focus:ring-4 focus:ring-cielo/20 transition-all resize-none text-lg"
           />
 
-          <div className="flex flex-wrap gap-2 mt-3">
-            {POLICIES.map((p, i) => (
-              <button
-                key={i}
-                type="button"
-                disabled={isRunning}
-                onClick={() => setPolicy(p)}
-                className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 py-1.5 px-3 rounded-full transition-colors"
-              >
-                {p}
-              </button>
-            ))}
+          <div className="flex items-center gap-2 mt-3 w-full">
+            {/* Scroll Left Button */}
+            <button 
+              type="button" 
+              onClick={() => scrollPolicies('left')}
+              className="flex-shrink-0 z-10 bg-white shadow-sm rounded-full p-1.5 border border-gray-200 text-carbon hover:bg-gray-50 hover:scale-110 transition-all flex items-center justify-center"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+
+            {/* Scroll Container */}
+            <div 
+              ref={scrollRef}
+              className="flex-1 flex overflow-x-auto gap-2 pb-2 custom-scrollbar snap-x scroll-smooth"
+              style={{ 
+                maskImage: 'linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent)',
+                WebkitMaskImage: 'linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent)'
+              }}
+            >
+              {POLICIES.map((p, i) => (
+                <button
+                  key={i}
+                  type="button"
+                  disabled={isRunning}
+                  onClick={() => setPolicy(p)}
+                  className="whitespace-nowrap flex-shrink-0 text-sm font-medium bg-white hover:bg-gray-50 text-gray-700 py-2 px-4 rounded-full transition-all border border-gray-200 shadow-sm snap-start mx-1"
+                >
+                  {p}
+                </button>
+              ))}
+            </div>
+
+            {/* Scroll Right Button */}
+            <button 
+              type="button" 
+              onClick={() => scrollPolicies('right')}
+              className="flex-shrink-0 z-10 bg-white shadow-sm rounded-full p-1.5 border border-gray-200 text-carbon hover:bg-gray-50 hover:scale-110 transition-all flex items-center justify-center"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
           </div>
         </div>
 
@@ -86,39 +164,18 @@ export default function PolicyForm({ onStart, isRunning }) {
               >
                 Estándar (100)
               </button>
-              <button
-                type="button"
-                onClick={() => setMode('profunda')}
-                disabled={isRunning}
-                className={`flex-1 py-2 text-sm font-semibold rounded-pill transition-all ${mode === 'profunda' ? 'bg-white shadow-md text-cielo' : 'text-gray-500 hover:text-gray-700'}`}
-              >
-                Profunda (1K)
-              </button>
             </div>
           </div>
 
-          {/* Quality Selection */}
+          {/* Static Quality Indicator */}
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2 flex items-center gap-2">
               <Settings2 className="w-4 h-4" /> Motor de Inferencia
             </label>
-            <div className="flex bg-gray-100 p-1 rounded-pill">
-              <button
-                type="button"
-                onClick={() => setQuality('flash')}
-                disabled={isRunning}
-                className={`flex-1 flex items-center justify-center gap-1 py-2 text-sm font-semibold rounded-pill transition-all ${quality === 'flash' ? 'bg-white shadow-md text-naranja' : 'text-gray-500 hover:text-gray-700'}`}
-              >
-                <Zap className="w-4 h-4" /> Flash
-              </button>
-              <button
-                type="button"
-                onClick={() => setQuality('mayor_calidad')}
-                disabled={isRunning}
-                className={`flex-1 flex items-center justify-center gap-1 py-2 text-sm font-semibold rounded-pill transition-all ${quality === 'mayor_calidad' ? 'bg-white shadow-md text-naranja' : 'text-gray-500 hover:text-gray-700'}`}
-              >
-                <BrainCircuit className="w-4 h-4" /> Mayor Calidad
-              </button>
+            <div className="flex bg-gray-50 p-1 rounded-pill border border-gray-100">
+              <div className="flex-1 flex items-center justify-center gap-2 py-2 text-sm font-bold rounded-pill bg-white shadow-sm text-naranja">
+                <Zap className="w-4 h-4 fill-current" /> Análisis con Inteligencia Flash
+              </div>
             </div>
           </div>
         </div>
@@ -176,15 +233,19 @@ export default function PolicyForm({ onStart, isRunning }) {
           )}
         </div>
 
-        <div className="flex justify-center mt-8 relative z-10">
+        <div className="flex flex-col items-center justify-center mt-8 relative z-10">
           <button
             type="submit"
-            disabled={!policy.trim() || isRunning}
-            className={`btn-primary w-full md:w-auto md:px-12 md:py-4 text-lg ${isRunning ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={!policy.trim() || isRunning || dailySims.count >= 3}
+            className={`btn-primary w-full md:w-auto md:px-12 md:py-4 text-lg ${(isRunning || dailySims.count >= 3) ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            <Play className="w-6 h-6 fill-current" />
-            {isRunning ? 'Simulando...' : 'Iniciar Simulación'}
+            {dailySims.count >= 3 ? <Lock className="w-6 h-6 fill-current" /> : <Play className="w-6 h-6 fill-current" />}
+            {dailySims.count >= 3 ? 'Límite Diario Alcanzado' : (isRunning ? 'Simulando...' : 'Iniciar Simulación')}
           </button>
+          
+          <p className={`mt-3 text-sm font-bold ${dailySims.count >= 3 ? 'text-rojo' : 'text-gray-500'}`}>
+            Simulaciones disponibles hoy: {Math.max(0, 3 - dailySims.count)} / 3
+          </p>
         </div>
       </form>
     </div>
